@@ -1,6 +1,9 @@
 FROM node:alpine
 
-RUN npm install
+WORKDIR /app
+
+COPY . /app
+RUN cd /app && npm install
 
 EXPOSE 8080
 
