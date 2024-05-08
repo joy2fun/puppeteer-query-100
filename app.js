@@ -8,42 +8,50 @@ let page = null;
 async function connect() {
   if (browser && browser.connected) {
     console.log('connected. skip');
-    await initPage();
     return ;
   }
   console.log("connecting to :" + process.env.CHROME_ENDPOINT);
-  browser = await puppeteer.connect({
-    browserWSEndpoint: process.env.CHROME_ENDPOINT
-  });
+  if (process.env.CHROME_ENDPOINT.includes('ws://')) {
+    browser = await puppeteer.connect({
+      browserWSEndpoint: process.env.CHROME_ENDPOINT
+    });
+  } else {
+    browser = await puppeteer.launch({
+      headless: false,
+      executablePath: process.env.CHROME_ENDPOINT
+    });
+  }
   browser.once("disconnected", async () => {
-    console.log('disconnected. close browser');
-    try {
-      await browser.close();
-    } catch (e) {
-
-    }
+    console.log('disconnected.');
   })
-  await initPage();
 }
 
 async function initPage() {
   if (!page || page.isClosed() || page.mainFrame().isDetached()) {
     console.log("init page");
     page = await browser.newPage();
-    page.once("close", () => {
-      console.log("page closed");
-      page = null;
-    })
+    await page.setRequestInterception(true);
+    page.on('request', ir => {
+      if (ir.isInterceptResolutionHandled()) return;
+      let url = ir.url();
+      if (
+        url.includes('.png') ||
+        url.includes('.jpg') || 
+        url.includes('.gif') ||
+        url.includes('.do?')
+      )
+        ir.abort();
+      else ir.continue();
+    });
   } else {
     console.log("skip init page");
   }
 }
 
-(async () => {await connect();})();
-
 app.get('/query', async (req, res) => {
   try {
     await connect();
+    await initPage();
     const query = new Promise(resolve => {
       page.on('response', async response => {
         if (response.url().indexOf('query?type=') > 0) {
