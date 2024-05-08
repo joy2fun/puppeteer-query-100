@@ -9,3 +9,5 @@ COPY package* /app
 RUN cd /app && npm install
 
 COPY app.js /app
+
+ENV LISTEN_PORT=8080
