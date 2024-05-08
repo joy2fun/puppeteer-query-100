@@ -1,10 +1,11 @@
 FROM node:alpine
 
 WORKDIR /app
-
-COPY . /app
-RUN cd /app && npm install
+CMD [ "node", "app.js" ]
 
 EXPOSE 8080
 
-CMD [ "node", "app.js" ]
+COPY package* /app
+RUN cd /app && npm install
+
+COPY app.js /app
