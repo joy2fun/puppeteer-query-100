@@ -98,8 +98,13 @@ app.get('/screenshot', async (req, res) => {
 app.get('/ver', async (req, res) => {
   try {
     await init();
-    await page.type('#ver-code-input', req.query.code);
-    await page.click('button[data-yq-events="submitCode"]');
+    const hasVerCode = await page.$('#ver-code-input') !== null;
+    if (hasVerCode) {
+      await page.type('#ver-code-input', req.query.code);
+      await page.click('button[data-yq-events="submitCode"]');
+    } else {
+      return res.send('skip');
+    }
     return res.send('done');
   } catch (err) {
     console.error(err);
