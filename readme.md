@@ -6,6 +6,10 @@
 CHROME_ENDPOINT=ws://localhost:3000?token=YOUR_TOKEN
 # express listen port
 LISTEN_PORT=8080
+
+# ENABLE_LOGIN
+# TRACK_USERNAME
+# TRACK_PASSWORD
 ```
 
 ## REPL
@@ -14,3 +18,4 @@ LISTEN_PORT=8080
 export CHROME_ENDPOINT='/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
 node -i -e "`cat app.js`"
 ```
+
