@@ -8,6 +8,6 @@ EXPOSE 8080
 COPY package* /app
 RUN cd /app && npm install
 
-COPY app.js /app
+COPY *.js /app
 
 ENV LISTEN_PORT=8080
