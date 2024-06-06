@@ -100,6 +100,7 @@ app.get('/ver', async (req, res) => {
     await init();
     await page.type('#ver-code-input', req.query.code);
     await page.click('button[data-yq-events="submitCode"]');
+    return res.send('done');
   } catch (err) {
     console.error(err);
     return res.status(500).send('var error');
