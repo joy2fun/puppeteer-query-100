@@ -77,6 +77,7 @@ async function login(email, pass) {
 
 app.get('/screenshot', async (req, res) => {
   try {
+    await init();
     const hasVerCode = await page.$('#ver-code-input') !== null;
 
     if (!hasVerCode) {
@@ -96,6 +97,7 @@ app.get('/screenshot', async (req, res) => {
 
 app.get('/ver', async (req, res) => {
   try {
+    await init();
     await page.type('#ver-code-input', req.query.code);
     await page.click('button[data-yq-events="submitCode"]');
   } catch (err) {
