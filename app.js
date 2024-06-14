@@ -48,6 +48,7 @@ function closePage(page)
 
 async function query(url) {
   await init();
+  let timer = 0;
   const page = await initPage();
   const queryPromise = new Promise (resolve => {
     page.on('response', async response => {
@@ -57,9 +58,10 @@ async function query(url) {
         setTimeout(() => {
           closePage(page);
         }, 5000);
+        clearTimeout(timer);
       }
     });
-    setTimeout(async () => {
+    timer = setTimeout(async () => {
       resolve({timeout: true});
       closePage(page);
     }, 20000);
