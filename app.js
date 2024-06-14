@@ -41,7 +41,7 @@ async function initPage() {
 function closePage(page)
 {
   try {
-    if (page) page.close();
+    if (page && !page.isClosed()) page.close();
   } catch (e) {
   }
 }
